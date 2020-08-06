@@ -28,7 +28,9 @@ async function getUsers() {
 			.then(response => calcStatistics(response))
 			.then(response => renderStatistics(response))
 	}
-	catch (e) { error(e) }
+	catch (e) { 
+		error(e) 
+	}
 	
 	await toggleLoader()
 }
@@ -36,11 +38,11 @@ async function getUsers() {
 function error(e) {
 	errorBlock.innerHTML = `Упс, при загрузке данных что-то пошло не так :( ${e}`
 	toggleVisibleError()
+	setTimeout(toggleVisibleError, 4000)
 }
 
 function toggleVisibleError() {
 	errorBlock.classList.toggle('error_active')
-	setTimeout(toggleVisibleError, 4000)
 }
 
 function toggleLoader() {
@@ -48,34 +50,25 @@ function toggleLoader() {
 }
 
 function renderCards(response) {
-	let template = ''
+	let clonesArr = []
+	const template = document.querySelector('#card-template').content.children[0]
+
 	response.forEach((item) => {
-		template += 
-			`<div class="card-wrapper">
-				<div class="card">
-					<div>
-						<img src="${item.picture.large}" alt="">
-					</div>
-					<div>${item.name.title} ${item.name.first} ${item.name.last}</div>
-					<div>${item.gender}</div>
-					<div>
-						<a href="tel:${item.phone}">${item.phone}</a>
-					</div>
-					<div>
-						<a href="mailto:${item.email}">${item.email}</a>
-					</div>
-					<div>
-						<span>${item.location.state},</span>
-						<span>${item.location.city},</span>
-						<span>${item.location.street.name} /</span>
-						<span>${item.location.street.number}</span>
-					</div>
-					<div>Дата рождения: ${item.dob.date.substring(0, 10)}</div>
-					<div>Дата регистрации: ${item.registered.date.substring(0, 10)}</div>
-				</div>
-			</div>`
+		const card = document.importNode(template, true)
+		
+		card.querySelector('.card__img').attributes.src.value = item.picture.large
+		card.querySelector('.card__name').textContent = `${item.name.title} ${item.name.first} ${item.name.last}`
+		card.querySelector('.card__gender').textContent = item.gender
+		card.querySelector('.card__tel').attributes.href.value = `tel:${item.phone}`
+		card.querySelector('.card__tel').textContent = item.phone
+		card.querySelector('.card__email').attributes.href.value = `tel:${item.emial}`
+		card.querySelector('.card__email').textContent = item.email
+		card.querySelector('.card__address').textContent = `${item.location.state}, ${item.location.city}, ${item.location.street.name} / ${item.location.street.number}`
+		card.querySelector('.card__birthday').textContent = `Дата рождения: ${item.dob.date.substring(0, 10)}`
+		card.querySelector('.card__date-reg').textContent = `Дата регистрации: ${item.registered.date.substring(0, 10)}`
+		
+		cards.appendChild(card)
 	})
-	cards.innerHTML = template
 	return response
 }
 
@@ -106,18 +99,17 @@ function mostGender() {
 }
 
 function renderStatistics(response) {
-	let template = `<div>Всего: ${statsData.total}</div>
-									<div>
-										<span>Мужчин: ${statsData.genders.male}</span> |
-										<span>Женщин: ${statsData.genders.female}</span>
-									</div>
-									<div>${mostGender()}</div>
-									<div>
-										<ol>${renderNationality(statsData.nationality)}</ol>
-									</div>`
-	statistics.innerHTML = template
-}
+	const template = document.querySelector('#statistics-template').content
+	const clone = document.importNode(template, true)
 
+	clone.querySelector('.statistics__total').textContent = `Всего: ${statsData.total}`
+	clone.querySelector('.statistics__genders').textContent = `Мужчин: ${statsData.genders.male} | Женщин: ${statsData.genders.female}`
+	clone.querySelector('.statistics__most-gender').textContent = mostGender()
+	clone.querySelector('.statistics__nationality').innerHTML = renderNationality(statsData.nationality)
+	
+	statistics.innerText = ''
+	statistics.appendChild(clone)
+}
 
 function renderNationality(nationality) {
 	let template = ''

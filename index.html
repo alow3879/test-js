@@ -13,7 +13,7 @@
 					<h3>Пользователи</h3>
 					<div class="cards"></div>
 				</div>
-				<div class="block">
+				<div class="block statistics-block">
 					<h3>Статистика</h3>
 					<div class="statistics"></div>
 				</div>
@@ -26,6 +26,37 @@
 				</div>
 			</div>
 		</section>
+
+		<template id="card-template">
+			<div class="card-wrapper">
+				<div class="card">
+					<div>
+						<img class="card__img" src="" alt="">
+					</div>
+					<div class="card__name"></div>
+					<div class="card__gender"></div>
+					<div>
+						<a class="card__tel" href=""></a>
+					</div>
+					<div>
+						<a class="card__email" href=""></a>
+					</div>
+					<div class="card__address"></div>
+					<div class="card__birthday"></div>
+					<div class="card__date-reg"></div>
+				</div>
+			</div>
+		</template>
+
+		<template id="statistics-template">
+			<div class="statistics__total"></div>
+			<div class="statistics__genders"></div>
+			<div class="statistics__most-gender"></div>
+			<div>
+				<ol class="statistics__nationality"><ol>
+			</div>
+		</template>
+
 		<script src="index.js"></script>
 	</body>
 </html>
